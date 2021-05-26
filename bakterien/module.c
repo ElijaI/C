@@ -93,8 +93,8 @@ matrix_t matrixmult(matrix_t m1, matrix_t m2) {
  * @param: matrix_t m, die auszugebende Matrix
  * @param: char s[], Titel der Ausgabe als String (Char-Array)
  */
-void printmatrix(matrix_t m, char s[]) {
-        printf("%s\n", s);
+void printmatrix(matrix_t m, char[] s) {
+	printf("%s\n", s);
         for (int i = 0; i < m.zeilen; i++) {
                 for (int j = 0; j < m.spalten; j++) {
                         printf("%lf ", m.matrix[i][j]);

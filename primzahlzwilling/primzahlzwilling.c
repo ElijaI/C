@@ -1,29 +1,31 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
 int primerk(int zahl) {
-	int ret = 1;
-	for(int i = 2; i <= sqrt(zahl) && ret == 1; i++) {
+	for(int i = 2; i <= sqrt(zahl); i++) {
 		if (zahl % i == 0) {
-			ret = 0;
+			return 0;
 		}
 	}
-	return(ret);
+	return 1;
 }
 
 int main(void) {
-	FILE *fp1, *fp2, *fp3, *fp4;
-	int rueck1, rueck2, rueck3, rueck4, j;
+	int rueck, letzte, aktuelle, buf;
+	int j = 0;
 	int max = 400;
 	int ber = max / 4;
-	int ber1 = ber * 0;
-	int ber2 = ber * 1;
-	int ber3 = ber * 2;
-	int ber4 = ber * 3;
+	int pipefd[4][2];
+	while(j < 4) {
+		
+		if(pipe(pipefd[j]) < 0) {
+			printf("Pipe Error\n");
+			exit(1);
+		}
 
-	while(j <= 4) {
 		rueck = fork();
 		switch (rueck) {
 			case -1: {
@@ -32,23 +34,34 @@ int main(void) {
 			}
 
 			case 0: {
-				char name[10];
+				close(pipefd[j][0]);
+				char name[30];
+				int kindber = ber * j;
 				sprintf(name, "kind%i.txt", j);
-				fp = fopen(name, "w");
-				for(int i = ber1 + 3; i < ber + ber1; i++) {
-					int zwilling = primerk(i - 2) + primerk(i);
-					if(zwilling == 2) {
-						fprintf(fp1, "%i, %i\n", i - 2, i);
+
+				for(int i = kindber; i < ber + kindber; i++) {
+					if (primerk(i)) {	
+						if(i - letzte == 2) {
+							if(write(pipefd[j][1], &i, sizeof(i)) < 0)
+								printf("Error write\n");
+						}
+						letzte = i;
 					}
 				}
-				fclose(fp);
 				exit(0);
 			}
 
 			default: {
-				wait(NULL);
+				fcntl(pipefd[j][0], F_SETFD, fcntl(piprfd[j][0], F_GETFD) | O_NONBLOCK);
+				close(pipefd[j][1]);
+				int abbruch = 4;
+				while (abbruch > 0)
+
+				j++;
 				break;
 			}
 		}
+
 	}
+	
 }

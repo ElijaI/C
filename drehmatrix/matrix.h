@@ -22,5 +22,5 @@ matrix_t skalarmult(matrix_t m1, double skalar);
 matrix_t matrixmult(matrix_t m1, matrix_t m2);
 
 //Prototyp der Funktion zur Ausgabe von Matrizen mit Text
-void printmatrix(matrix_t m, char s[]);
+void printmatrix(matrix_t m);
 #endif

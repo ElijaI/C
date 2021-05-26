@@ -6,3 +6,7 @@ module.o: module.c
 
 drehmatrix.o: drehmatrix.c
 	gcc -c -o drehmatrix.o drehmatrix.c
+
+run:
+	./drehmatrix > temp.csv
+	cat temp.csv | tr \. \, > drehmatrix.csv
